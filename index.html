@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud AI Chatbot</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #chatbox {
+            height: 350px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user {
+            text-align: right;
+            margin: 10px;
+        }
+
+        .bot {
+            text-align: left;
+            margin: 10px;
+        }
+
+        input {
+            width: 75%;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>☁️ Cloud AI Chatbot</h1>
+
+    <div id="chatbox"></div>
+
+    <input
+        type="text"
+        id="message"
+        placeholder="Type your message..."
+    >
+
+    <button onclick="sendMessage()">Send</button>
+
+</div>
+
+<script>
+
+function sendMessage() {
+
+    let message = document.getElementById("message").value;
+
+    if (message.trim() === "") {
+        return;
+    }
+
+    let chatbox = document.getElementById("chatbox");
+
+    chatbox.innerHTML +=
+        "<div class='user'><b>You:</b> " + message + "</div>";
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            message: message
+        })
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        chatbox.innerHTML +=
+            "<div class='bot'><b>Bot:</b> "
+            + data.response +
+            "</div>";
+
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+    });
+
+    document.getElementById("message").value = "";
+}
+
+</script>
+
+</body>
+</html>
